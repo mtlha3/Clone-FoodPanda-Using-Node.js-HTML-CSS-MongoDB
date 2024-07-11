@@ -1,0 +1,128 @@
+.animate-background {
+	animation: slideBackground 3s infinite alternate-reverse;
+}
+
+@keyframes slideBackground {
+	0% {
+		background-position: top;
+	}
+
+	100% {
+		background-position: bottom;
+	}
+}
+
+.slider {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	position: relative;
+}
+.slider img {
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: opacity 0.5s ease;
+}
+
+
+
+
+body {
+	background-color: #f2f2f2;
+	font-family: Arial, sans-serif;
+}
+h1 {
+	color: #333;
+	text-align: center;
+}
+form {
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px #ccc;
+	margin: 0 auto;
+	padding: 20px;
+	width: 400px;
+}
+label {
+	display: block;
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 16px;
+	padding: 10px;
+	width: 100%;
+}
+input[type="submit"] {
+	background-color: #333;
+	border: none;
+	border-radius: 3px;
+	color: #fff;
+	cursor: pointer;
+	font-size: 16px;
+	padding: 10px;
+	margin-top: 10px;
+	width: 100%;
+}
+input[type="submit"]:hover {
+	background-color: #555;
+}
+
+
+.food-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 20px;
+}
+
+.card {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	width: 100%;
+}
+.card img {
+	width: 100%;
+	height: 300px;
+	border-radius: 5px 5px 0 0;
+}
+.card-content {
+	padding: 10px;
+}
+.card h3, .card p {
+	margin: 5px 0;
+}
+.add-to-cart {
+	width: 100%;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	padding: 10px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.add-to-cart:hover {
+	background-color: blueviolet;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed; 
+}
+
+td {
+    max-width: 300px; 
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

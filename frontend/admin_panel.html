@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-gray-100">
+    <header class="bg-gray-800 shadow-md">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <h1 class="text-3xl text-white font-bold">
+          <i class="fas fa-utensils" style="color: #ffffff"></i> FOODPANDA
+        </h1>
+        <div class="flex space-x-4">
+          <a href="addfood.html" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Add Food</a>
+          <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </header>
+    <div class="container mx-auto py-8">
+      <div id="cardContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+      function editFood(foodId) {
+        const card = document.getElementById(`card_${foodId}`);
+        const currentName = card.querySelector('.food-name').textContent;
+        const currentPrice = card.querySelector('.food-price').textContent.replace('RS:', '');
+        const currentURL = card.querySelector('.food-img').src;
+
+        Swal.fire({
+          title: 'Edit Food Item',
+          html: `
+            <input id="swal-input1" class="swal2-input" placeholder="Food Name" value="${currentName}">
+            <input id="swal-input2" class="swal2-input" placeholder="Food Price" value="${currentPrice}">
+            <input id="swal-input3" class="swal2-input" placeholder="Image URL" value="${currentURL}">
+          `,
+          focusConfirm: false,
+          preConfirm: () => {
+            const newName = document.getElementById('swal-input1').value;
+            const newPrice = document.getElementById('swal-input2').value;
+            const newURL = document.getElementById('swal-input3').value;
+
+            return fetch(`http://localhost:3050/food/${foodId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                foodname: newName,
+                foodprice: newPrice,
+                url: newURL,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                card.querySelector('.food-name').textContent = newName;
+                card.querySelector('.food-price').textContent = `RS:${newPrice}`;
+                card.querySelector('.food-img').src = newURL;
+                Swal.fire('Updated!', 'The food item has been updated.', 'success');
+              })
+              .catch((error) => {
+                Swal.fire('Error!', 'There was an error updating the food item.', 'error');
+              });
+          }
+        });
+      }
+
+      function deleteFood(foodId) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'Do you really want to delete this food item?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(`http://localhost:3050/food/${foodId}`, {
+              method: 'DELETE',
+            })
+              .then((response) => {
+                if (response.ok) {
+                  const card = document.getElementById(`card_${foodId}`);
+                  if (card) {
+                    card.remove();
+                    Swal.fire('Deleted!', 'The food item has been deleted.', 'success');
+                  }
+                } else {
+                  throw new Error('Failed to delete food item');
+                }
+              })
+              .catch((error) => {
+                Swal.fire('Error!', 'There was an error deleting the food item.', 'error');
+              });
+          }
+        });
+      }
+
+      fetch('http://localhost:3050/food/')
+        .then((response) => response.json())
+        .then((foods) => {
+          const cardContainer = document.getElementById('cardContainer');
+
+          foods.forEach((food) => {
+            const card = document.createElement('div');
+            const foodId = food.foodid;
+            card.id = `card_${foodId}`;
+            card.className = 'bg-white shadow-md rounded-lg p-4';
+            card.innerHTML = `
+              <div class="food-info">
+                <img class="food-img w-full h-48 object-cover rounded-t-lg" src="${food.url}" alt="${food.foodname}">
+                <h2 class="food-name text-xl font-bold my-2">${food.foodname}</h2>
+                <p class="food-price text-gray-700 mb-2">RS:${food.foodprice}</p>
+              </div>
+              <div class="food-actions flex justify-end">
+                <button onclick="editFood('${foodId}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Edit</button>
+                <button onclick="deleteFood('${foodId}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+              </div>
+            `;
+            cardContainer.appendChild(card);
+          });
+        })
+        .catch((error) => console.error('Error fetching foods:', error));
+    </script>
+  </body>
+</html>

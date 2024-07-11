@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="./assessts/utensils-solid.png">
+
+    <title>ADD FOOD | FoodPanda</title>
+  </head>
+
+  <body class="bg-gray-200 font-sans">
+    <header class="bg-gray-800 shadow-md">
+      <div
+        class="container mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <h1 class="text-3xl text-white font-bold">
+          <i class="fa-solid fa-utensils" style="color: #ffffff"></i> FOODPANDA
+        </h1>
+        <div class="flex space-x-4">
+          <button
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            id="logoutBtn"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <h1 class="text-center text-black text-3xl mt-8">Add Food</h1>
+    <form
+      id="foodadd"
+      class="bg-white rounded-lg shadow-md p-6 mx-auto mt-8 max-w-md"
+    >
+      <label for="foodid" class="block font-bold text-gray-700">Food Id:</label>
+      <input
+        type="number"
+        id="foodid"
+        name="foodid"
+        required
+        class="block w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+      />
+
+      <label for="foodname" class="block mt-4 font-bold text-gray-700"
+        >Food Name:</label
+      >
+      <input
+        type="text"
+        id="foodname"
+        name="foodname"
+        required
+        class="block w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+      />
+
+      <label for="foodprice" class="block mt-4 font-bold text-gray-700"
+        >Price:</label
+      >
+      <input
+        type="text"
+        id="foodprice"
+        name="foodprice"
+        required
+        class="block w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+      />
+
+      <label for="url" class="block mt-4 font-bold text-gray-700"
+        >Image URL:</label
+      >
+      <input
+        type="text"
+        id="url"
+        name="url"
+        required
+        class="block w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+      />
+
+      <button
+        type="submit"
+        class="block w-full bg-gray-700 text-white font-bold py-2 px-4 mt-6 rounded"
+      >
+        Add
+      </button>
+    </form>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      document
+        .getElementById('foodadd')
+        .addEventListener('submit', function (event) {
+          event.preventDefault();
+
+          const FoodData = {
+            foodid: parseInt(document.getElementById('foodid').value), // Parse to integer
+            foodname: document.getElementById('foodname').value,
+            foodprice: document.getElementById('foodprice').value,
+            url: document.getElementById('url').value,
+          };
+
+          axios
+            .post('http://localhost:3050/food/addfood', FoodData)
+            .then((response) => {
+              alert('Food Added successfully!');
+              console.log(response);
+              window.location.href = 'admin_panel.html';
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+
+          document.getElementById('foodadd').reset();
+        });
+    </script>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
